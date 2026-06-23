@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { Login } from './pages/auth/Login'
 import { Register } from './pages/auth/Register'
+import { SelectBusiness } from './pages/dashboard/SelectBusiness'
+import { CreateBusiness } from './pages/dashboard/CreateBusiness'
 
 function PrivateRoute({ children }) {
   const { user } = useAuth()
@@ -18,8 +20,9 @@ function AppRoutes() {
     <Routes>
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-      <Route path="/dashboard" element={<PrivateRoute><div className="p-8 text-2xl font-bold">Dashboard — em breve!</div></PrivateRoute>} />
-      <Route path="*" element={<Navigate to="/login" />} />
+      <Route path="/dashboard" element={<PrivateRoute><SelectBusiness /></PrivateRoute>} />
+      <Route path="/dashboard/new" element={<PrivateRoute><CreateBusiness /></PrivateRoute>} />
+      <Route path="*" element={<Navigate to="/dashboard" />} />
     </Routes>
   )
 }
