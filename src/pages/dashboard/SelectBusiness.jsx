@@ -97,7 +97,7 @@ export function SelectBusiness() {
               {businesses.map((business) => (
                 <Card
                   key={business.id}
-                  onClick={() => navigate(`/dashboard/${business.id}`)}
+                  onClick={() => navigate(`/b/${business.id}/dashboard`)}
                 >
                   <p className="font-semibold text-gray-900 text-sm">{business.name}</p>
                   <p className="text-xs text-gray-400 mt-1">{business.type || 'Negócio'}</p>
