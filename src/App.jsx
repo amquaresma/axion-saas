@@ -9,6 +9,7 @@ import { BusinessDashboard } from './pages/business/Dashboard'
 import { Clients } from './pages/business/Clients'
 import { Services } from './pages/business/Services'
 import { Finance } from './pages/business/Finance'
+import { Inventory } from './pages/business/Inventory'
 
 function PrivateRoute({ children }) {
   const { user } = useAuth()
@@ -32,7 +33,7 @@ function AppRoutes() {
       <Route path="/b/:businessId/clientes" element={<PrivateRoute><BusinessLayout><Clients /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/servicos" element={<PrivateRoute><BusinessLayout><Services /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/financeiro" element={<PrivateRoute><BusinessLayout><Finance /></BusinessLayout></PrivateRoute>} />
-      <Route path="/b/:businessId/estoque" element={<PrivateRoute><BusinessLayout><div className="text-gray-400">Estoque — em breve</div></BusinessLayout></PrivateRoute>} />
+      <Route path="/b/:businessId/estoque" element={<PrivateRoute><BusinessLayout><Inventory /></BusinessLayout></PrivateRoute>} />
       <Route path="*" element={<Navigate to="/dashboard" />} />
     </Routes>
   )
