@@ -8,6 +8,8 @@ const menuItems = [
   { label: 'Financeiro', path: 'financeiro' },
   { label: 'Estoque', path: 'estoque' },
   { label: 'Funcionários', path: 'funcionarios' },
+  { label: 'Ordens de Serviço', path: 'ordens-servico' },
+  { label: 'Equipamentos', path: 'equipamentos' },
 ]
 
 export function Sidebar() {
