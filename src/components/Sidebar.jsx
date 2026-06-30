@@ -7,6 +7,7 @@ const menuItems = [
   { label: 'Serviços', path: 'servicos' },
   { label: 'Financeiro', path: 'financeiro' },
   { label: 'Estoque', path: 'estoque' },
+  { label: 'Funcionários', path: 'funcionarios' },
 ]
 
 export function Sidebar() {
