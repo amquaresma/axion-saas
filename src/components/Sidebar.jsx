@@ -12,6 +12,7 @@ const menuItems = [
   { label: 'Equipamentos', path: 'equipamentos' },
   { label: 'Ferramentas', path: 'ferramentas' },
   { label: 'Agenda', path: 'agenda' },
+  { label: 'Central de Controle', path: 'controle' },
 ]
 
 export function Sidebar() {

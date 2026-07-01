@@ -15,6 +15,7 @@ import { WorkOrders } from './pages/business/WorkOrders'
 import { Equipment } from './pages/business/Equipment'
 import { Tools } from './pages/business/Tools'
 import { Agenda } from './pages/business/Agenda'
+import { ControlCenter } from './pages/business/ControlCenter'
 
 function PrivateRoute({ children }) {
   const { user } = useAuth()
@@ -44,6 +45,7 @@ function AppRoutes() {
       <Route path="/b/:businessId/equipamentos" element={<PrivateRoute><BusinessLayout><Equipment /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/ferramentas" element={<PrivateRoute><BusinessLayout><Tools /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/agenda" element={<PrivateRoute><BusinessLayout><Agenda /></BusinessLayout></PrivateRoute>} />
+      <Route path="/b/:businessId/controle" element={<PrivateRoute><BusinessLayout><ControlCenter /></BusinessLayout></PrivateRoute>} />
       <Route path="*" element={<Navigate to="/dashboard" />} />
     </Routes>
   )
