@@ -13,6 +13,7 @@ const menuItems = [
   { label: 'Ferramentas', path: 'ferramentas' },
   { label: 'Agenda', path: 'agenda' },
   { label: 'Central de Controle', path: 'controle' },
+  { label: 'Relatórios', path: 'relatorios' },
 ]
 
 export function Sidebar() {
