@@ -11,6 +11,7 @@ const menuItems = [
   { label: 'Ordens de Serviço', path: 'ordens-servico' },
   { label: 'Equipamentos', path: 'equipamentos' },
   { label: 'Ferramentas', path: 'ferramentas' },
+  { label: 'Agenda', path: 'agenda' },
 ]
 
 export function Sidebar() {
