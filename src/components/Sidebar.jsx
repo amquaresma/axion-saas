@@ -10,6 +10,7 @@ const menuItems = [
   { label: 'Funcionários', path: 'funcionarios' },
   { label: 'Ordens de Serviço', path: 'ordens-servico' },
   { label: 'Equipamentos', path: 'equipamentos' },
+  { label: 'Ferramentas', path: 'ferramentas' },
 ]
 
 export function Sidebar() {
