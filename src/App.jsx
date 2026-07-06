@@ -17,6 +17,7 @@ import { Tools } from './pages/business/Tools'
 import { Agenda } from './pages/business/Agenda'
 import { ControlCenter } from './pages/business/ControlCenter'
 import { Reports } from './pages/business/Reports'
+import { Settings } from './pages/settings/Settings'
 
 function PrivateRoute({ children }) {
   const { user } = useAuth()
@@ -35,6 +36,7 @@ function AppRoutes() {
       <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
       <Route path="/dashboard" element={<PrivateRoute><SelectBusiness /></PrivateRoute>} />
       <Route path="/dashboard/new" element={<PrivateRoute><CreateBusiness /></PrivateRoute>} />
+      <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
       <Route path="/b/:businessId" element={<PrivateRoute><BusinessLayout><Navigate to="dashboard" /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/dashboard" element={<PrivateRoute><BusinessLayout><BusinessDashboard /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/clientes" element={<PrivateRoute><BusinessLayout><Clients /></BusinessLayout></PrivateRoute>} />
