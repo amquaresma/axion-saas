@@ -44,6 +44,7 @@ export function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+
           <Input
             label="Senha"
             type="password"
@@ -52,7 +53,19 @@ export function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+          {/* Link para recuperação de senha */}
+          <div className="text-right">
+            <Link
+              to="/forgot-password"
+              className="text-sm text-blue-600 hover:underline"
+            >
+              Esqueci minha senha
+            </Link>
+          </div>
+
+          {error && (
+            <p className="text-sm text-red-500 text-center">{error}</p>
+          )}
 
           <Button type="submit" disabled={loading}>
             {loading ? 'Entrando...' : 'Entrar'}
@@ -61,7 +74,10 @@ export function Login() {
 
         <p className="text-center text-sm text-gray-500 mt-6">
           Não tem conta?{' '}
-          <Link to="/register" className="text-blue-600 hover:underline font-medium">
+          <Link
+            to="/register"
+            className="text-blue-600 hover:underline font-medium"
+          >
             Cadastre-se
           </Link>
         </p>

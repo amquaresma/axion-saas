@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { Login } from './pages/auth/Login'
 import { Register } from './pages/auth/Register'
+import { ForgotPassword } from './pages/auth/ForgotPassword'
+import { ResetPassword } from './pages/auth/ResetPassword'
 import { SelectBusiness } from './pages/dashboard/SelectBusiness'
 import { CreateBusiness } from './pages/dashboard/CreateBusiness'
 import { BusinessLayout } from './layouts/BusinessLayout'
@@ -18,6 +20,7 @@ import { Agenda } from './pages/business/Agenda'
 import { ControlCenter } from './pages/business/ControlCenter'
 import { Reports } from './pages/business/Reports'
 import { Settings } from './pages/settings/Settings'
+import { Notifications } from './pages/Notifications'
 
 function PrivateRoute({ children }) {
   const { user } = useAuth()
@@ -34,9 +37,12 @@ function AppRoutes() {
     <Routes>
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+      <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/dashboard" element={<PrivateRoute><SelectBusiness /></PrivateRoute>} />
       <Route path="/dashboard/new" element={<PrivateRoute><CreateBusiness /></PrivateRoute>} />
       <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+      <Route path="/notifications" element={<PrivateRoute><Notifications /></PrivateRoute>} />
       <Route path="/b/:businessId" element={<PrivateRoute><BusinessLayout><Navigate to="dashboard" /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/dashboard" element={<PrivateRoute><BusinessLayout><BusinessDashboard /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/clientes" element={<PrivateRoute><BusinessLayout><Clients /></BusinessLayout></PrivateRoute>} />
