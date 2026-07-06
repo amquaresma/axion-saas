@@ -3,6 +3,15 @@ import { useParams } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { useBusiness } from '../../contexts/BusinessContext'
 
+const SUGGESTIONS = [
+  'Quanto faturei este mês?',
+  'Qual é meu lucro atual?',
+  'Tenho itens com estoque baixo?',
+  'Quantas OS estão abertas?',
+  'Como está a saúde do meu negócio?',
+  'Quais são meus próximos agendamentos?',
+]
+
 export function AIAssistant() {
   const { businessId } = useParams()
   const { business } = useBusiness()
@@ -28,6 +37,7 @@ export function AIAssistant() {
         { count: employees },
         { data: workOrders },
         { data: appointments },
+        { data: tools },
       ] = await Promise.all([
         supabase.from('transactions').select('*').eq('business_id', businessId).gte('date', firstDay),
         supabase.from('clients').select('*', { count: 'exact', head: true }).eq('business_id', businessId),
@@ -35,25 +45,28 @@ export function AIAssistant() {
         supabase.from('inventory').select('*').eq('business_id', businessId),
         supabase.from('employees').select('*', { count: 'exact', head: true }).eq('business_id', businessId).eq('status', 'ativo'),
         supabase.from('work_orders').select('*, clients(name)').eq('business_id', businessId),
-        supabase.from('appointments').select('*').eq('business_id', businessId).gte('date', today),
+        supabase.from('appointments').select('*').eq('business_id', businessId).gte('date', today).order('date').limit(5),
+        supabase.from('tools').select('*').eq('business_id', businessId),
       ])
 
       const receitas = transactions?.filter(t => t.type === 'receita').reduce((acc, t) => acc + Number(t.amount), 0) || 0
       const despesas = transactions?.filter(t => t.type === 'despesa').reduce((acc, t) => acc + Number(t.amount), 0) || 0
       const itensBaixoEstoque = inventory?.filter(i => i.quantity <= i.min_quantity) || []
       const osAbertas = workOrders?.filter(o => ['aberta', 'em andamento'].includes(o.status)) || []
+      const ferramentasManutencao = tools?.filter(t => t.status === 'manutenção') || []
 
       setContext({
         negocio: business?.name,
-        mes: now.toLocaleString('pt-BR', { month: 'long' }),
+        mes: now.toLocaleString('pt-BR', { month: 'long', year: 'numeric' }),
         receitas, despesas, lucro: receitas - despesas,
         totalClientes: clients || 0,
         totalFuncionarios: employees || 0,
-        servicos: services || [],
-        itensBaixoEstoque,
-        osAbertas,
-        proximosAgendamentos: appointments?.slice(0, 5) || [],
-        transacoes: transactions || [],
+        totalServicos: services?.length || 0,
+        servicosEmAndamento: services?.filter(s => s.status === 'em andamento').length || 0,
+        itensBaixoEstoque: itensBaixoEstoque.map(i => `${i.name} (${i.quantity} un.)`),
+        osAbertas: osAbertas.map(o => `${o.clients?.name || 'sem cliente'} - ${o.status}`),
+        proximosAgendamentos: appointments?.map(a => `${a.title} em ${new Date(a.date + 'T00:00:00').toLocaleDateString('pt-BR')}`) || [],
+        ferramentasManutencao: ferramentasManutencao.map(t => t.name),
       })
     }
     if (business) fetchContext()
@@ -63,61 +76,60 @@ export function AIAssistant() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  async function handleSend() {
-    if (!input.trim() || loading) return
+  async function handleSend(text) {
+    const userMessage = (text || input).trim()
+    if (!userMessage || loading) return
 
-    const userMessage = input.trim()
     setInput('')
     setMessages((prev) => [...prev, { role: 'user', content: userMessage }])
     setLoading(true)
 
-    const systemPrompt = `Você é um assistente de gestão empresarial integrado ao sistema Axion. Responda de forma direta, objetiva e em português brasileiro.
+    const systemPrompt = `Você é um assistente de gestão empresarial integrado ao sistema Axion. Responda de forma direta, objetiva e em português brasileiro. Seja conciso mas completo.
 
-Dados atuais do negócio "${context?.negocio}":
-- Mês atual: ${context?.mes}
-- Receitas do mês: R$ ${context?.receitas?.toFixed(2)}
-- Despesas do mês: R$ ${context?.despesas?.toFixed(2)}
-- Lucro do mês: R$ ${context?.lucro?.toFixed(2)}
-- Total de clientes: ${context?.totalClientes}
+Dados atuais do negócio "${context?.negocio}" (${context?.mes}):
+- Receitas: R$ ${context?.receitas?.toFixed(2)}
+- Despesas: R$ ${context?.despesas?.toFixed(2)}
+- Lucro: R$ ${context?.lucro?.toFixed(2)}
+- Clientes: ${context?.totalClientes}
 - Funcionários ativos: ${context?.totalFuncionarios}
-- Serviços cadastrados: ${context?.servicos?.length} (${context?.servicos?.filter(s => s.status === 'em andamento').length} em andamento)
-- Itens com estoque baixo: ${context?.itensBaixoEstoque?.length} (${context?.itensBaixoEstoque?.map(i => i.name).join(', ') || 'nenhum'})
-- Ordens de serviço abertas: ${context?.osAbertas?.length} (${context?.osAbertas?.map(o => o.clients?.name).join(', ') || 'nenhuma'})
-- Próximos agendamentos: ${context?.proximosAgendamentos?.length}
+- Serviços: ${context?.totalServicos} total, ${context?.servicosEmAndamento} em andamento
+- Estoque baixo: ${context?.itensBaixoEstoque?.length > 0 ? context.itensBaixoEstoque.join(', ') : 'nenhum'}
+- OS abertas: ${context?.osAbertas?.length > 0 ? context.osAbertas.join(', ') : 'nenhuma'}
+- Próximos agendamentos: ${context?.proximosAgendamentos?.length > 0 ? context.proximosAgendamentos.join(', ') : 'nenhum'}
+- Ferramentas em manutenção: ${context?.ferramentasManutencao?.length > 0 ? context.ferramentasManutencao.join(', ') : 'nenhuma'}`
 
-Responda perguntas sobre esses dados de forma clara e útil. Se perguntarem sobre algo que não está nos dados, diga que não tem essa informação disponível no momento.`
+    const history = messages
+      .filter((_, i) => i > 0)
+      .map(m => ({ role: m.role, content: m.content }))
 
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`
+        },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
-          system: systemPrompt,
+          model: 'llama-3.3-70b-versatile',
           messages: [
-            ...messages.filter(m => m.role !== 'assistant' || messages.indexOf(m) > 0).map(m => ({ role: m.role, content: m.content })),
+            { role: 'system', content: systemPrompt },
+            ...history,
             { role: 'user', content: userMessage }
-          ]
+          ],
+          max_tokens: 1024,
+          temperature: 0.7,
         })
       })
 
       const data = await response.json()
-      const reply = data.content?.[0]?.text || 'Não consegui processar sua pergunta. Tente novamente.'
+      const reply = data.choices?.[0]?.message?.content || 'Não consegui processar sua pergunta. Tente novamente.'
       setMessages((prev) => [...prev, { role: 'assistant', content: reply }])
     } catch (err) {
-      setMessages((prev) => [...prev, { role: 'assistant', content: 'Erro ao conectar com a IA. Verifique sua conexão e tente novamente.' }])
+      setMessages((prev) => [...prev, { role: 'assistant', content: 'Erro ao conectar com a IA. Tente novamente.' }])
     }
 
     setLoading(false)
   }
-
-  const suggestions = [
-    'Quanto faturei este mês?',
-    'Qual é meu lucro atual?',
-    'Tenho itens com estoque baixo?',
-    'Quantas OS estão abertas?',
-  ]
 
   return (
     <div className="flex flex-col h-[calc(100vh-120px)]">
@@ -126,42 +138,44 @@ Responda perguntas sobre esses dados de forma clara e útil. Se perguntarem sobr
         <p className="text-gray-500 text-sm mt-1">Faça perguntas sobre seu negócio em linguagem natural.</p>
       </div>
 
-      {/* Chat */}
       <div className="flex-1 bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col">
         <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
           {messages.map((msg, i) => (
             <div key={i} className={"flex " + (msg.role === 'user' ? 'justify-end' : 'justify-start')}>
-              <div className={"max-w-[75%] px-4 py-3 rounded-xl text-sm leading-relaxed " + (msg.role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900')}>
+              <div className={"max-w-[75%] px-4 py-3 rounded-xl text-sm leading-relaxed whitespace-pre-wrap " + (msg.role === 'user' ? 'bg-blue-600 text-white rounded-br-sm' : 'bg-gray-100 text-gray-900 rounded-bl-sm')}>
                 {msg.content}
               </div>
             </div>
           ))}
           {loading && (
             <div className="flex justify-start">
-              <div className="bg-gray-100 px-4 py-3 rounded-xl text-sm text-gray-500">
-                Analisando dados...
+              <div className="bg-gray-100 px-4 py-3 rounded-xl text-sm text-gray-400 flex gap-1 items-center">
+                <span className="animate-pulse">●</span>
+                <span className="animate-pulse delay-75">●</span>
+                <span className="animate-pulse delay-150">●</span>
               </div>
             </div>
           )}
           <div ref={bottomRef} />
         </div>
 
-        {/* Sugestões */}
         {messages.length === 1 && (
-          <div className="px-6 pb-4 flex flex-wrap gap-2">
-            {suggestions.map((s) => (
-              <button
-                key={s}
-                onClick={() => { setInput(s); }}
-                className="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-100 transition-colors"
-              >
-                {s}
-              </button>
-            ))}
+          <div className="px-6 pb-4">
+            <p className="text-xs text-gray-400 mb-2">Sugestões:</p>
+            <div className="flex flex-wrap gap-2">
+              {SUGGESTIONS.map((s) => (
+                <button
+                  key={s}
+                  onClick={() => handleSend(s)}
+                  className="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Input */}
         <div className="border-t border-gray-200 p-4 flex gap-3">
           <input
             type="text"
@@ -172,7 +186,7 @@ Responda perguntas sobre esses dados de forma clara e útil. Se perguntarem sobr
             className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
           />
           <button
-            onClick={handleSend}
+            onClick={() => handleSend()}
             disabled={loading || !input.trim()}
             className="px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
