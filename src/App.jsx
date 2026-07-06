@@ -19,6 +19,7 @@ import { Tools } from './pages/business/Tools'
 import { Agenda } from './pages/business/Agenda'
 import { ControlCenter } from './pages/business/ControlCenter'
 import { Reports } from './pages/business/Reports'
+import { BusinessHealth } from './pages/business/BusinessHealth'
 import { Settings } from './pages/settings/Settings'
 import { Notifications } from './pages/Notifications'
 
@@ -56,6 +57,7 @@ function AppRoutes() {
       <Route path="/b/:businessId/agenda" element={<PrivateRoute><BusinessLayout><Agenda /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/controle" element={<PrivateRoute><BusinessLayout><ControlCenter /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/relatorios" element={<PrivateRoute><BusinessLayout><Reports /></BusinessLayout></PrivateRoute>} />
+      <Route path="/b/:businessId/saude" element={<PrivateRoute><BusinessLayout><BusinessHealth /></BusinessLayout></PrivateRoute>} />
       <Route path="*" element={<Navigate to="/dashboard" />} />
     </Routes>
   )

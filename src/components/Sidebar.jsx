@@ -14,6 +14,7 @@ const menuItems = [
   { label: 'Agenda', path: 'agenda' },
   { label: 'Central de Controle', path: 'controle' },
   { label: 'Relatórios', path: 'relatorios' },
+  { label: 'Saúde do Negócio', path: 'saude' },
 ]
 
 export function Sidebar() {
