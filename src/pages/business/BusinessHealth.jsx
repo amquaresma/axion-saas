@@ -108,12 +108,12 @@ export function BusinessHealth() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Saúde do Negócio</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Saúde do Negócio</h1>
         <p className="text-gray-500 text-sm mt-1">Avaliação geral do desempenho do seu negócio.</p>
       </div>
 
       {/* Score */}
-      <div className="bg-white border border-gray-200 rounded-xl p-8 mb-6 flex items-center gap-8">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-8 mb-6 flex items-center gap-8">
         <div className="text-center">
           <div className={`text-6xl font-bold ${config.color}`}>{score}</div>
           <div className={`text-sm font-medium mt-1 px-3 py-1 rounded-full ${config.bg} ${config.color}`}>{config.label}</div>
@@ -132,7 +132,7 @@ export function BusinessHealth() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Pontos fortes */}
-        <div className="bg-white border border-gray-200 rounded-xl p-5">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
           <h2 className="text-sm font-semibold text-green-700 mb-3">Pontos fortes</h2>
           {strong.length === 0 ? (
             <p className="text-xs text-gray-400">Nenhum ponto forte identificado.</p>
@@ -141,8 +141,8 @@ export function BusinessHealth() {
               <div key={i} className="flex items-start gap-2 mb-2">
                 <span className="text-green-500 mt-0.5">✓</span>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{d.label}</p>
-                  <p className="text-xs text-gray-500">{d.message}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{d.label}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{d.message}</p>
                 </div>
               </div>
             ))
@@ -150,7 +150,7 @@ export function BusinessHealth() {
         </div>
 
         {/* Pontos de atenção */}
-        <div className="bg-white border border-gray-200 rounded-xl p-5">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
           <h2 className="text-sm font-semibold text-yellow-700 mb-3">Pontos de atenção</h2>
           {attention.length === 0 ? (
             <p className="text-xs text-gray-400">Nenhum ponto de atenção.</p>
@@ -159,8 +159,8 @@ export function BusinessHealth() {
               <div key={i} className="flex items-start gap-2 mb-2">
                 <span className="text-yellow-500 mt-0.5">!</span>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{d.label}</p>
-                  <p className="text-xs text-gray-500">{d.message}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{d.label}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{d.message}</p>
                 </div>
               </div>
             ))
@@ -168,7 +168,7 @@ export function BusinessHealth() {
         </div>
 
         {/* Problemas críticos */}
-        <div className="bg-white border border-gray-200 rounded-xl p-5">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
           <h2 className="text-sm font-semibold text-red-700 mb-3">Problemas críticos</h2>
           {critical.length === 0 ? (
             <p className="text-xs text-gray-400">Nenhum problema crítico.</p>
@@ -177,8 +177,8 @@ export function BusinessHealth() {
               <div key={i} className="flex items-start gap-2 mb-2">
                 <span className="text-red-500 mt-0.5">✕</span>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{d.label}</p>
-                  <p className="text-xs text-gray-500">{d.message}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{d.label}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{d.message}</p>
                 </div>
               </div>
             ))

@@ -101,7 +101,7 @@ export function WorkOrders() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Ordens de Serviço</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Ordens de Serviço</h1>
           <p className="text-gray-500 text-sm mt-1">Gerencie os atendimentos técnicos.</p>
         </div>
         <div className="w-44">
@@ -112,17 +112,17 @@ export function WorkOrders() {
       {loading ? (
         <p className="text-gray-400 text-sm">Carregando...</p>
       ) : orders.length === 0 ? (
-        <div className="bg-white border border-gray-200 rounded-xl p-12 text-center">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-12 text-center">
           <p className="text-gray-500 text-sm">Nenhuma ordem de serviço registrada ainda.</p>
           <div className="w-44 mx-auto mt-4">
             <Button onClick={openNew}>Abrir primeira OS</Button>
           </div>
         </div>
       ) : (
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-200 bg-gray-50">
+              <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
                 <th className="text-left px-6 py-3 text-gray-500 font-medium">Cliente</th>
                 <th className="text-left px-6 py-3 text-gray-500 font-medium">Equipamento</th>
                 <th className="text-left px-6 py-3 text-gray-500 font-medium">Técnico</th>
@@ -133,11 +133,11 @@ export function WorkOrders() {
             </thead>
             <tbody>
               {orders.map((order) => (
-                <tr key={order.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-900">{order.clients?.name || '—'}</td>
-                  <td className="px-6 py-4 text-gray-500">{order.equipment ? `${order.equipment.type} ${order.equipment.model || ''}` : '—'}</td>
-                  <td className="px-6 py-4 text-gray-500">{order.employees?.name || '—'}</td>
-                  <td className="px-6 py-4 text-gray-500">{order.price ? fmt(order.price) : '—'}</td>
+                <tr key={order.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                  <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{order.clients?.name || '—'}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{order.equipment ? `${order.equipment.type} ${order.equipment.model || ''}` : '—'}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{order.employees?.name || '—'}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{order.price ? fmt(order.price) : '—'}</td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[order.status] || 'bg-gray-100 text-gray-600'}`}>
                       {order.status}

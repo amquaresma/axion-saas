@@ -89,7 +89,7 @@ export function Finance() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Financeiro</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Financeiro</h1>
           <p className="text-gray-500 text-sm mt-1">Controle suas receitas e despesas.</p>
         </div>
         <div className="w-44">
@@ -99,16 +99,16 @@ export function Finance() {
 
       {/* Resumo */}
       <div className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
-          <p className="text-sm text-gray-500">Receitas</p>
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6">
+          <p className="text-sm text-gray-500 dark:text-gray-400">Receitas</p>
           <p className="text-2xl font-bold text-green-600 mt-1">{fmt(totalReceitas)}</p>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
-          <p className="text-sm text-gray-500">Despesas</p>
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6">
+          <p className="text-sm text-gray-500 dark:text-gray-400">Despesas</p>
           <p className="text-2xl font-bold text-red-500 mt-1">{fmt(totalDespesas)}</p>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
-          <p className="text-sm text-gray-500">Saldo</p>
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6">
+          <p className="text-sm text-gray-500 dark:text-gray-400">Saldo</p>
           <p className={`text-2xl font-bold mt-1 ${saldo >= 0 ? 'text-gray-900' : 'text-red-500'}`}>{fmt(saldo)}</p>
         </div>
       </div>
@@ -116,17 +116,17 @@ export function Finance() {
       {loading ? (
         <p className="text-gray-400 text-sm">Carregando...</p>
       ) : transactions.length === 0 ? (
-        <div className="bg-white border border-gray-200 rounded-xl p-12 text-center">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-12 text-center">
           <p className="text-gray-500 text-sm">Nenhuma transação registrada ainda.</p>
           <div className="w-44 mx-auto mt-4">
             <Button onClick={openNew}>Adicionar transação</Button>
           </div>
         </div>
       ) : (
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-200 bg-gray-50">
+              <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
                 <th className="text-left px-6 py-3 text-gray-500 font-medium">Descrição</th>
                 <th className="text-left px-6 py-3 text-gray-500 font-medium">Categoria</th>
                 <th className="text-left px-6 py-3 text-gray-500 font-medium">Data</th>
@@ -137,10 +137,10 @@ export function Finance() {
             </thead>
             <tbody>
               {transactions.map((t) => (
-                <tr key={t.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-900">{t.description}</td>
-                  <td className="px-6 py-4 text-gray-500">{t.category || '—'}</td>
-                  <td className="px-6 py-4 text-gray-500">{new Date(t.date).toLocaleDateString('pt-BR')}</td>
+                <tr key={t.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                  <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{t.description}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{t.category || '—'}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{new Date(t.date).toLocaleDateString('pt-BR')}</td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${t.type === 'receita' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}>
                       {t.type}

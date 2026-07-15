@@ -89,14 +89,14 @@ export function ControlCenter() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Central de Controle</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Central de Controle</h1>
         <p className="text-gray-500 text-sm mt-1">Pendências e alertas do seu negócio.</p>
       </div>
 
       {loading ? (
         <p className="text-gray-400 text-sm">Carregando...</p>
       ) : alerts.length === 0 ? (
-        <div className="bg-white border border-gray-200 rounded-xl p-12 text-center">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-12 text-center">
           <p className="text-gray-900 font-medium">Tudo em ordem!</p>
           <p className="text-gray-500 text-sm mt-1">Nenhuma pendência ou alerta no momento.</p>
         </div>
@@ -106,7 +106,7 @@ export function ControlCenter() {
             <div
               key={index}
               onClick={() => navigate(`/b/${businessId}/${alert.path}`)}
-              className="bg-white border border-gray-200 rounded-xl px-6 py-4 flex items-center justify-between cursor-pointer hover:border-gray-300 hover:shadow-sm transition-all"
+              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-6 py-4 flex items-center justify-between cursor-pointer hover:border-gray-300 hover:shadow-sm transition-all"
             >
               <div className="flex items-center gap-4">
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${severityConfig[alert.severity].className}`}>
@@ -114,7 +114,7 @@ export function ControlCenter() {
                 </span>
                 <div>
                   <p className="text-xs text-gray-400 mb-0.5">{typeLabels[alert.type] || alert.type}</p>
-                  <p className="text-sm text-gray-900">{alert.message}</p>
+                  <p className="text-sm text-gray-900 dark:text-white">{alert.message}</p>
                 </div>
               </div>
               <span className="text-gray-400 text-sm">→</span>

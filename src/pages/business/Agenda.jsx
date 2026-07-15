@@ -102,7 +102,7 @@ export function Agenda() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Agenda</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Agenda</h1>
           <p className="text-gray-500 text-sm mt-1">Gerencie seus compromissos e agendamentos.</p>
         </div>
         <div className="w-44">
@@ -125,17 +125,17 @@ export function Agenda() {
       {loading ? (
         <p className="text-gray-400 text-sm">Carregando...</p>
       ) : filtered.length === 0 ? (
-        <div className="bg-white border border-gray-200 rounded-xl p-12 text-center">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-12 text-center">
           <p className="text-gray-500 text-sm">Nenhum agendamento encontrado.</p>
           <div className="w-44 mx-auto mt-4">
             <Button onClick={openNew}>Novo agendamento</Button>
           </div>
         </div>
       ) : (
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-200 bg-gray-50">
+              <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
                 <th className="text-left px-6 py-3 text-gray-500 font-medium">Título</th>
                 <th className="text-left px-6 py-3 text-gray-500 font-medium">Data</th>
                 <th className="text-left px-6 py-3 text-gray-500 font-medium">Horário</th>
@@ -147,12 +147,12 @@ export function Agenda() {
             </thead>
             <tbody>
               {filtered.map((appt) => (
-                <tr key={appt.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-900">{appt.title}</td>
-                  <td className="px-6 py-4 text-gray-500">{new Date(appt.date + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
-                  <td className="px-6 py-4 text-gray-500">{appt.time || '—'}</td>
-                  <td className="px-6 py-4 text-gray-500">{appt.clients?.name || '—'}</td>
-                  <td className="px-6 py-4 text-gray-500">{appt.employees?.name || '—'}</td>
+                <tr key={appt.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                  <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{appt.title}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{new Date(appt.date + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{appt.time || '—'}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{appt.clients?.name || '—'}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{appt.employees?.name || '—'}</td>
                   <td className="px-6 py-4">
                     <span className={"px-2 py-1 rounded-full text-xs font-medium " + (statusColors[appt.status] || 'bg-gray-100 text-gray-600')}>
                       {appt.status}

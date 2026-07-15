@@ -90,7 +90,7 @@ export function Tools() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Ferramentas e Ativos</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Ferramentas e Ativos</h1>
           <p className="text-gray-500 text-sm mt-1">Controle os recursos internos do seu negócio.</p>
         </div>
         <div className="w-44">
@@ -101,17 +101,17 @@ export function Tools() {
       {loading ? (
         <p className="text-gray-400 text-sm">Carregando...</p>
       ) : tools.length === 0 ? (
-        <div className="bg-white border border-gray-200 rounded-xl p-12 text-center">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-12 text-center">
           <p className="text-gray-500 text-sm">Nenhuma ferramenta cadastrada ainda.</p>
           <div className="w-44 mx-auto mt-4">
             <Button onClick={openNew}>Adicionar ferramenta</Button>
           </div>
         </div>
       ) : (
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-200 bg-gray-50">
+              <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
                 <th className="text-left px-6 py-3 text-gray-500 font-medium">Nome</th>
                 <th className="text-left px-6 py-3 text-gray-500 font-medium">Categoria</th>
                 <th className="text-left px-6 py-3 text-gray-500 font-medium">Responsável</th>
@@ -122,11 +122,11 @@ export function Tools() {
             </thead>
             <tbody>
               {tools.map((tool) => (
-                <tr key={tool.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-900">{tool.name}</td>
-                  <td className="px-6 py-4 text-gray-500">{tool.category || '—'}</td>
-                  <td className="px-6 py-4 text-gray-500">{tool.employees?.name || '—'}</td>
-                  <td className="px-6 py-4 text-gray-500">{tool.next_maintenance ? new Date(tool.next_maintenance).toLocaleDateString('pt-BR') : '—'}</td>
+                <tr key={tool.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                  <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{tool.name}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{tool.category || '—'}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{tool.employees?.name || '—'}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{tool.next_maintenance ? new Date(tool.next_maintenance).toLocaleDateString('pt-BR') : '—'}</td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[tool.status] || 'bg-gray-100 text-gray-600'}`}>
                       {tool.status}

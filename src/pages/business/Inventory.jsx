@@ -85,7 +85,7 @@ export function Inventory() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Estoque</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Estoque</h1>
           <p className="text-gray-500 text-sm mt-1">Controle os produtos e materiais do seu negócio.</p>
         </div>
         <div className="w-40">
@@ -96,17 +96,17 @@ export function Inventory() {
       {loading ? (
         <p className="text-gray-400 text-sm">Carregando...</p>
       ) : items.length === 0 ? (
-        <div className="bg-white border border-gray-200 rounded-xl p-12 text-center">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-12 text-center">
           <p className="text-gray-500 text-sm">Nenhum item cadastrado ainda.</p>
           <div className="w-40 mx-auto mt-4">
             <Button onClick={openNew}>Adicionar primeiro item</Button>
           </div>
         </div>
       ) : (
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-200 bg-gray-50">
+              <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
                 <th className="text-left px-6 py-3 text-gray-500 font-medium">Item</th>
                 <th className="text-left px-6 py-3 text-gray-500 font-medium">Categoria</th>
                 <th className="text-left px-6 py-3 text-gray-500 font-medium">Qtd</th>
@@ -118,12 +118,12 @@ export function Inventory() {
             </thead>
             <tbody>
               {items.map((item) => (
-                <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-900">{item.name}</td>
-                  <td className="px-6 py-4 text-gray-500">{item.category || '—'}</td>
-                  <td className="px-6 py-4 text-gray-500">{item.quantity}</td>
-                  <td className="px-6 py-4 text-gray-500">{item.min_quantity}</td>
-                  <td className="px-6 py-4 text-gray-500">{fmt(item.price)}</td>
+                <tr key={item.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                  <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{item.name}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{item.category || '—'}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{item.quantity}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{item.min_quantity}</td>
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{fmt(item.price)}</td>
                   <td className="px-6 py-4">
                     {item.quantity <= item.min_quantity ? (
                       <span className="px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-600">Estoque baixo</span>
