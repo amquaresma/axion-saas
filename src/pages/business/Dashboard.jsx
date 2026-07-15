@@ -50,7 +50,6 @@ export function BusinessDashboard() {
       setStats({ clients: clients || 0, services: services || 0, openOrders: openOrders || 0, receitas, despesas, saldo: receitas - despesas, itensBaixoEstoque })
       setTransactions(recentTransactions || [])
 
-      // Agrupar por data para o gráfico
       const grouped = {}
       recentTransactions?.forEach((t) => {
         const date = new Date(t.date + 'T00:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
@@ -76,46 +75,44 @@ export function BusinessDashboard() {
   if (loadingBusiness || loading) return <p className="text-gray-400 text-sm">Carregando...</p>
 
   const statCards = [
-    { label: 'Clientes', value: stats.clients, path: 'clientes', color: 'text-gray-900' },
-    { label: 'Serviços em andamento', value: stats.services, path: 'servicos', color: 'text-blue-600' },
-    { label: 'OS abertas', value: stats.openOrders, path: 'ordens-servico', color: 'text-orange-600' },
-    { label: 'Estoque baixo', value: stats.itensBaixoEstoque, path: 'estoque', color: stats.itensBaixoEstoque > 0 ? 'text-red-500' : 'text-gray-900' },
-    { label: 'Receitas do mês', value: fmt(stats.receitas), path: 'financeiro', color: 'text-green-600' },
-    { label: 'Despesas do mês', value: fmt(stats.despesas), path: 'financeiro', color: 'text-red-500' },
-    { label: 'Lucro do mês', value: fmt(stats.saldo), path: 'financeiro', color: stats.saldo >= 0 ? 'text-green-600' : 'text-red-500' },
-    { label: 'Saúde do negócio', value: '→ Ver', path: 'saude', color: 'text-blue-600' },
+    { label: 'Clientes', value: stats.clients, path: 'clientes', color: 'text-gray-900 dark:text-white' },
+    { label: 'Serviços em andamento', value: stats.services, path: 'servicos', color: 'text-blue-600 dark:text-blue-400' },
+    { label: 'OS abertas', value: stats.openOrders, path: 'ordens-servico', color: 'text-orange-600 dark:text-orange-400' },
+    { label: 'Estoque baixo', value: stats.itensBaixoEstoque, path: 'estoque', color: stats.itensBaixoEstoque > 0 ? 'text-red-500' : 'text-gray-900 dark:text-white' },
+    { label: 'Receitas do mês', value: fmt(stats.receitas), path: 'financeiro', color: 'text-green-600 dark:text-green-400' },
+    { label: 'Despesas do mês', value: fmt(stats.despesas), path: 'financeiro', color: 'text-red-500 dark:text-red-400' },
+    { label: 'Lucro do mês', value: fmt(stats.saldo), path: 'financeiro', color: stats.saldo >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500' },
+    { label: 'Saúde do negócio', value: '→ Ver', path: 'saude', color: 'text-blue-600 dark:text-blue-400' },
   ]
 
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">{business?.name}</h1>
-        <p className="text-gray-500 text-sm mt-1">Visão geral do negócio</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{business?.name}</h1>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Visão geral do negócio</p>
       </div>
 
-      {/* Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         {statCards.map((card) => (
           <div
             key={card.label}
             onClick={() => navigate(`/b/${businessId}/${card.path}`)}
-            className="bg-white border border-gray-200 rounded-xl p-5 cursor-pointer hover:border-blue-300 hover:shadow-sm transition-all"
+            className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 cursor-pointer hover:border-blue-400 dark:hover:border-blue-600 hover:shadow-sm transition-all"
           >
-            <p className="text-xs text-gray-500">{card.label}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">{card.label}</p>
             <p className={`text-xl font-bold mt-1 ${card.color}`}>{card.value}</p>
           </div>
         ))}
       </div>
 
-      {/* Filtro */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-base font-semibold text-gray-900">Fluxo de caixa</h2>
+        <h2 className="text-base font-semibold text-gray-900 dark:text-white">Fluxo de caixa</h2>
         <div className="flex gap-1">
           {[['7d', '7 dias'], ['30d', '30 dias'], ['90d', '90 dias'], ['12m', '12 meses']].map(([val, label]) => (
             <button
               key={val}
               onClick={() => setFilter(val)}
-              className={"px-3 py-1 rounded-lg text-xs font-medium border transition-all " + (filter === val ? 'bg-blue-50 border-blue-400 text-blue-700' : 'border-gray-200 text-gray-500 hover:bg-gray-50')}
+              className={"px-3 py-1 rounded-lg text-xs font-medium border transition-all " + (filter === val ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-400 text-blue-700 dark:text-blue-400' : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800')}
             >
               {label}
             </button>
@@ -123,8 +120,7 @@ export function BusinessDashboard() {
         </div>
       </div>
 
-      {/* Gráfico de área */}
-      <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 mb-6">
         {chartData.length === 0 ? (
           <p className="text-gray-400 text-sm text-center py-8">Nenhuma transação no período.</p>
         ) : (
@@ -140,10 +136,10 @@ export function BusinessDashboard() {
                   <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
               <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#9ca3af' }} />
               <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} tickFormatter={(v) => `R$${v}`} />
-              <Tooltip formatter={(value) => fmt(value)} />
+              <Tooltip formatter={(value) => fmt(value)} contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', color: '#f9fafb' }} />
               <Legend />
               <Area type="monotone" dataKey="receitas" name="Receitas" stroke="#22c55e" fill="url(#colorReceitas)" strokeWidth={2} />
               <Area type="monotone" dataKey="despesas" name="Despesas" stroke="#ef4444" fill="url(#colorDespesas)" strokeWidth={2} />
@@ -152,16 +148,15 @@ export function BusinessDashboard() {
         )}
       </div>
 
-      {/* Gráfico de barras */}
       {chartData.length > 0 && (
-        <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-          <h2 className="text-sm font-semibold text-gray-700 mb-4">Receitas vs Despesas por dia</h2>
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 mb-6">
+          <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">Receitas vs Despesas por dia</h2>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={chartData} margin={{ top: 5, right: 10, left: 10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
               <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#9ca3af' }} />
               <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} tickFormatter={(v) => `R$${v}`} />
-              <Tooltip formatter={(value) => fmt(value)} />
+              <Tooltip formatter={(value) => fmt(value)} contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', color: '#f9fafb' }} />
               <Legend />
               <Bar dataKey="receitas" name="Receitas" fill="#22c55e" radius={[4, 4, 0, 0]} />
               <Bar dataKey="despesas" name="Despesas" fill="#ef4444" radius={[4, 4, 0, 0]} />
@@ -170,37 +165,36 @@ export function BusinessDashboard() {
         </div>
       )}
 
-      {/* Extrato */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-gray-900">Extrato de transações</h2>
-          <button onClick={() => navigate(`/b/${businessId}/financeiro`)} className="text-xs text-blue-600 hover:underline">Ver tudo</button>
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Extrato de transações</h2>
+          <button onClick={() => navigate(`/b/${businessId}/financeiro`)} className="text-xs text-blue-600 dark:text-blue-400 hover:underline">Ver tudo</button>
         </div>
         {transactions.length === 0 ? (
           <p className="text-gray-400 text-sm text-center py-8">Nenhuma transação no período.</p>
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50">
-                <th className="text-left px-6 py-3 text-gray-500 font-medium">Descrição</th>
-                <th className="text-left px-6 py-3 text-gray-500 font-medium">Categoria</th>
-                <th className="text-left px-6 py-3 text-gray-500 font-medium">Data</th>
-                <th className="text-left px-6 py-3 text-gray-500 font-medium">Tipo</th>
-                <th className="text-right px-6 py-3 text-gray-500 font-medium">Valor</th>
+              <tr className="border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+                <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Descrição</th>
+                <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Categoria</th>
+                <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Data</th>
+                <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Tipo</th>
+                <th className="text-right px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Valor</th>
               </tr>
             </thead>
             <tbody>
               {transactions.map((t) => (
-                <tr key={t.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-3 font-medium text-gray-900">{t.description}</td>
-                  <td className="px-6 py-3 text-gray-500">{t.category || '—'}</td>
-                  <td className="px-6 py-3 text-gray-500">{new Date(t.date + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
+                <tr key={t.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                  <td className="px-6 py-3 font-medium text-gray-900 dark:text-white">{t.description}</td>
+                  <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{t.category || '—'}</td>
+                  <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{new Date(t.date + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
                   <td className="px-6 py-3">
-                    <span className={"px-2 py-0.5 rounded-full text-xs font-medium " + (t.type === 'receita' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600')}>
+                    <span className={"px-2 py-0.5 rounded-full text-xs font-medium " + (t.type === 'receita' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400')}>
                       {t.type}
                     </span>
                   </td>
-                  <td className={"px-6 py-3 font-semibold text-right " + (t.type === 'receita' ? 'text-green-600' : 'text-red-500')}>
+                  <td className={"px-6 py-3 font-semibold text-right " + (t.type === 'receita' ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400')}>
                     {t.type === 'receita' ? '+' : '-'} {fmt(t.amount)}
                   </td>
                 </tr>
