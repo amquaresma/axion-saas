@@ -134,15 +134,15 @@ Dados atuais do negócio "${context?.negocio}" (${context?.mes}):
   return (
     <div className="flex flex-col h-[calc(100vh-120px)]">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Assistente de IA</h1>
-        <p className="text-gray-500 text-sm mt-1">Faça perguntas sobre seu negócio em linguagem natural.</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Assistente de IA</h1>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Faça perguntas sobre seu negócio em linguagem natural.</p>
       </div>
 
-      <div className="flex-1 bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col">
-        <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
+      <div className="flex-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden flex flex-col">
+        <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4 bg-white dark:bg-gray-900">
           {messages.map((msg, i) => (
             <div key={i} className={"flex " + (msg.role === 'user' ? 'justify-end' : 'justify-start')}>
-              <div className={"max-w-[75%] px-4 py-3 rounded-xl text-sm leading-relaxed whitespace-pre-wrap " + (msg.role === 'user' ? 'bg-blue-600 text-white rounded-br-sm' : 'bg-gray-100 text-gray-900 rounded-bl-sm')}>
+              <div className={"max-w-[75%] px-4 py-3 rounded-xl text-sm leading-relaxed whitespace-pre-wrap " + (msg.role === 'user' ? 'bg-blue-600 text-white rounded-br-sm' : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-bl-sm')}>
                 {msg.content}
               </div>
             </div>
@@ -160,14 +160,14 @@ Dados atuais do negócio "${context?.negocio}" (${context?.mes}):
         </div>
 
         {messages.length === 1 && (
-          <div className="px-6 pb-4">
-            <p className="text-xs text-gray-400 mb-2">Sugestões:</p>
+          <div className="px-6 pb-4 bg-white dark:bg-gray-900">
+            <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">Sugestões:</p>
             <div className="flex flex-wrap gap-2">
               {SUGGESTIONS.map((s) => (
                 <button
                   key={s}
                   onClick={() => handleSend(s)}
-                  className="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors"
+                  className="px-3 py-1.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-xs text-gray-600 dark:text-gray-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:border-blue-300 dark:hover:border-blue-700 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
                 >
                   {s}
                 </button>
@@ -176,14 +176,14 @@ Dados atuais do negócio "${context?.negocio}" (${context?.mes}):
           </div>
         )}
 
-        <div className="border-t border-gray-200 p-4 flex gap-3">
+        <div className="border-t border-gray-200 dark:border-gray-800 p-4 flex gap-3 bg-white dark:bg-gray-900">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Pergunte algo sobre seu negócio..."
-            className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+            className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900 focus:border-blue-400 dark:focus:border-blue-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
           />
           <button
             onClick={() => handleSend()}
