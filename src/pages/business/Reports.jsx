@@ -108,8 +108,8 @@ export function Reports() {
 
   function StatCard({ label, value, sub }) {
     return (
-      <div className="bg-white border border-gray-200 rounded-xl p-5">
-        <p className="text-sm text-gray-500">{label}</p>
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+        <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
         <p className="text-xl font-bold text-gray-900 mt-1">{value}</p>
         {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
       </div>
@@ -118,15 +118,15 @@ export function Reports() {
 
   function GroupCard({ title, data }) {
     return (
-      <div className="bg-white border border-gray-200 rounded-xl p-5">
-        <p className="text-sm font-medium text-gray-700 mb-3">{title}</p>
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+        <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{title}</p>
         {Object.entries(data).length === 0 ? (
           <p className="text-xs text-gray-400">Nenhum dado</p>
         ) : (
           Object.entries(data).map(([key, val]) => (
-            <div key={key} className="flex justify-between items-center py-1.5 border-b border-gray-100 last:border-0">
-              <span className="text-sm text-gray-600 capitalize">{key}</span>
-              <span className="text-sm font-medium text-gray-900">{typeof val === 'number' && val > 100 ? fmt(val) : val}</span>
+            <div key={key} className="flex justify-between items-center py-1.5 border-b border-gray-100 dark:border-gray-800 last:border-0">
+              <span className="text-sm text-gray-600 dark:text-gray-400 capitalize">{key}</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-white">{typeof val === 'number' && val > 100 ? fmt(val) : val}</span>
             </div>
           ))
         )}
@@ -148,12 +148,12 @@ export function Reports() {
         </div>
       </div>
 
-      <div className="flex gap-2 mb-6 border-b border-gray-200 overflow-x-auto">
+      <div className="flex gap-2 mb-6 border-b border-gray-200 dark:border-gray-800 overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={"px-4 py-2.5 text-sm font-medium border-b-2 transition-all -mb-px whitespace-nowrap " + (activeTab === tab.key ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700')}
+            className={"px-4 py-2.5 text-sm font-medium border-b-2 transition-all -mb-px whitespace-nowrap dark:text-gray-400 " + (activeTab === tab.key ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700')}
           >
             {tab.label}
           </button>
@@ -176,23 +176,23 @@ export function Reports() {
               <Button onClick={() => exportCSV(data.transactions, 'financeiro.csv')} variant="outline">Exportar CSV</Button>
             </div>
           </div>
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Descrição</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Categoria</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Data</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Tipo</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Valor</th>
+                <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Descrição</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Categoria</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Data</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Tipo</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Valor</th>
                 </tr>
               </thead>
               <tbody>
                 {data.transactions.map((t) => (
-                  <tr key={t.id} className="border-b border-gray-100">
+                  <tr key={t.id} className="border-b border-gray-100 dark:border-gray-800">
                     <td className="px-6 py-3 text-gray-900">{t.description}</td>
-                    <td className="px-6 py-3 text-gray-500">{t.category || '—'}</td>
-                    <td className="px-6 py-3 text-gray-500">{new Date(t.date).toLocaleDateString('pt-BR')}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{t.category || '—'}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{new Date(t.date).toLocaleDateString('pt-BR')}</td>
                     <td className="px-6 py-3"><span className={"px-2 py-0.5 rounded-full text-xs font-medium " + (t.type === 'receita' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600')}>{t.type}</span></td>
                     <td className={"px-6 py-3 font-medium " + (t.type === 'receita' ? 'text-green-600' : 'text-red-500')}>{fmt(t.amount)}</td>
                   </tr>
@@ -215,23 +215,23 @@ export function Reports() {
               <Button onClick={() => exportCSV(data.clients, 'clientes.csv')} variant="outline">Exportar CSV</Button>
             </div>
           </div>
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Nome</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Email</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Telefone</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Cadastro</th>
+                <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Nome</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Email</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Telefone</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Cadastro</th>
                 </tr>
               </thead>
               <tbody>
                 {data.clients.map((c) => (
-                  <tr key={c.id} className="border-b border-gray-100">
-                    <td className="px-6 py-3 font-medium text-gray-900">{c.name}</td>
-                    <td className="px-6 py-3 text-gray-500">{c.email || '—'}</td>
-                    <td className="px-6 py-3 text-gray-500">{c.phone || '—'}</td>
-                    <td className="px-6 py-3 text-gray-500">{new Date(c.created_at).toLocaleDateString('pt-BR')}</td>
+                  <tr key={c.id} className="border-b border-gray-100 dark:border-gray-800">
+                    <td className="px-6 py-3 font-medium text-gray-900 dark:text-white">{c.name}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{c.email || '—'}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{c.phone || '—'}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{new Date(c.created_at).toLocaleDateString('pt-BR')}</td>
                   </tr>
                 ))}
               </tbody>
@@ -253,23 +253,23 @@ export function Reports() {
               <Button onClick={() => exportCSV(data.services, 'servicos.csv')} variant="outline">Exportar CSV</Button>
             </div>
           </div>
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Serviço</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Cliente</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Valor</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Status</th>
+                <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Serviço</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Cliente</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Valor</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {data.services.map((s) => (
-                  <tr key={s.id} className="border-b border-gray-100">
-                    <td className="px-6 py-3 font-medium text-gray-900">{s.name}</td>
-                    <td className="px-6 py-3 text-gray-500">{s.clients?.name || '—'}</td>
-                    <td className="px-6 py-3 text-gray-500">{s.price ? fmt(s.price) : '—'}</td>
-                    <td className="px-6 py-3 text-gray-500">{s.status}</td>
+                  <tr key={s.id} className="border-b border-gray-100 dark:border-gray-800">
+                    <td className="px-6 py-3 font-medium text-gray-900 dark:text-white">{s.name}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{s.clients?.name || '—'}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{s.price ? fmt(s.price) : '—'}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{s.status}</td>
                   </tr>
                 ))}
               </tbody>
@@ -290,25 +290,25 @@ export function Reports() {
               <Button onClick={() => exportCSV(data.inventory, 'estoque.csv')} variant="outline">Exportar CSV</Button>
             </div>
           </div>
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Item</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Categoria</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Qtd</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Preço unit.</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Total</th>
+                <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Item</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Categoria</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Qtd</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Preço unit.</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Total</th>
                 </tr>
               </thead>
               <tbody>
                 {data.inventory.map((i) => (
-                  <tr key={i.id} className="border-b border-gray-100">
-                    <td className="px-6 py-3 font-medium text-gray-900">{i.name}</td>
-                    <td className="px-6 py-3 text-gray-500">{i.category || '—'}</td>
-                    <td className="px-6 py-3 text-gray-500">{i.quantity}</td>
-                    <td className="px-6 py-3 text-gray-500">{fmt(i.price)}</td>
-                    <td className="px-6 py-3 text-gray-500">{fmt(i.price * i.quantity)}</td>
+                  <tr key={i.id} className="border-b border-gray-100 dark:border-gray-800">
+                    <td className="px-6 py-3 font-medium text-gray-900 dark:text-white">{i.name}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{i.category || '—'}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{i.quantity}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{fmt(i.price)}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{fmt(i.price * i.quantity)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -329,24 +329,24 @@ export function Reports() {
               <Button onClick={() => exportCSV(data.employees, 'funcionarios.csv')} variant="outline">Exportar CSV</Button>
             </div>
           </div>
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Nome</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Cargo</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Salário</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Comissão</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Status</th>
+                <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Nome</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Cargo</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Salário</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Comissão</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {data.employees.map((e) => (
-                  <tr key={e.id} className="border-b border-gray-100">
-                    <td className="px-6 py-3 font-medium text-gray-900">{e.name}</td>
-                    <td className="px-6 py-3 text-gray-500">{e.role || '—'}</td>
-                    <td className="px-6 py-3 text-gray-500">{e.salary ? fmt(e.salary) : '—'}</td>
-                    <td className="px-6 py-3 text-gray-500">{e.commission_rate ? `${e.commission_rate}%` : '—'}</td>
+                  <tr key={e.id} className="border-b border-gray-100 dark:border-gray-800">
+                    <td className="px-6 py-3 font-medium text-gray-900 dark:text-white">{e.name}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{e.role || '—'}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{e.salary ? fmt(e.salary) : '—'}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{e.commission_rate ? `${e.commission_rate}%` : '—'}</td>
                     <td className="px-6 py-3"><span className={"px-2 py-0.5 rounded-full text-xs font-medium " + (e.status === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500')}>{e.status}</span></td>
                   </tr>
                 ))}
@@ -369,23 +369,23 @@ export function Reports() {
               <Button onClick={() => exportCSV(data.workOrders, 'ordens-servico.csv')} variant="outline">Exportar CSV</Button>
             </div>
           </div>
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Cliente</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Diagnóstico</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Valor</th>
-                  <th className="text-left px-6 py-3 text-gray-500 font-medium">Status</th>
+                <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Cliente</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Diagnóstico</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Valor</th>
+                  <th className="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {data.workOrders.map((o) => (
-                  <tr key={o.id} className="border-b border-gray-100">
-                    <td className="px-6 py-3 font-medium text-gray-900">{o.clients?.name || '—'}</td>
-                    <td className="px-6 py-3 text-gray-500">{o.diagnosis || '—'}</td>
-                    <td className="px-6 py-3 text-gray-500">{o.price ? fmt(o.price) : '—'}</td>
-                    <td className="px-6 py-3 text-gray-500">{o.status}</td>
+                  <tr key={o.id} className="border-b border-gray-100 dark:border-gray-800">
+                    <td className="px-6 py-3 font-medium text-gray-900 dark:text-white">{o.clients?.name || '—'}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{o.diagnosis || '—'}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{o.price ? fmt(o.price) : '—'}</td>
+                    <td className="px-6 py-3 text-gray-500 dark:text-gray-400">{o.status}</td>
                   </tr>
                 ))}
               </tbody>

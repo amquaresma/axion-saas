@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
-import { useTheme } from '../../contexts/ThemeContext'
+import { useTheme } from "../../contexts/ThemeContext"
+import { AxionLogo } from "../../components/AxionLogo"
 import { supabase } from '../../lib/supabase'
 import { Card } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
@@ -37,7 +38,7 @@ export function SelectBusiness() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">Axion</span>
+          <AxionLogo />
           <div className="flex items-center gap-3">
             <button
               onClick={toggleTheme}

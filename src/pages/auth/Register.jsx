@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
+import { AxionLogo } from '../../components/AxionLogo'
 
 export function Register() {
   const { signUp } = useAuth()
@@ -26,9 +27,9 @@ export function Register() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center p-4">
       <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm w-full max-w-md p-8">
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Axion</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">Crie sua conta grátis</p>
+        <div className="mb-8 flex flex-col items-center gap-3">
+          <AxionLogo />
+          <p className="text-gray-500 dark:text-gray-400 text-sm">Crie sua conta grátis</p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -42,6 +43,10 @@ export function Register() {
         <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
           Já tem conta?{' '}
           <Link to="/login" className="text-blue-600 dark:text-blue-400 hover:underline font-medium">Entrar</Link>
+        </p>
+
+        <p className="text-center text-xs text-gray-400 dark:text-gray-600 mt-4">
+          Emails de confirmação são enviados pelo Supabase. Verifique sua caixa de entrada.
         </p>
       </div>
     </div>
