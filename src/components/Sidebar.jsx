@@ -29,7 +29,10 @@ const menuGroups = [
   {
     label: 'Financeiro',
     items: [
-      { label: 'Financeiro', path: 'financeiro' },
+      { label: 'Visão Geral', path: 'financeiro' },
+      { label: 'Contas a Pagar/Receber', path: 'contas' },
+      { label: 'Contas Bancárias', path: 'bancos' },
+      { label: 'Transferências', path: 'transferencias' },
       { label: 'Relatórios', path: 'relatorios' },
     ]
   },
@@ -50,19 +53,15 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 min-h-screen bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col">
-      {/* Negócio atual */}
       <div
         className="px-5 py-4 border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         onClick={() => navigate('/dashboard')}
       >
         <p className="text-xs text-gray-400 dark:text-gray-500 mb-0.5">Axion</p>
-        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-          {business?.name || '...'}
-        </p>
+        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{business?.name || '...'}</p>
         <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">← Trocar negócio</p>
       </div>
 
-      {/* Menu */}
       <nav className="flex-1 py-4 overflow-y-auto">
         {menuGroups.map((group) => (
           <div key={group.label} className="mb-4">
