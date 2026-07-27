@@ -4,6 +4,7 @@ import { supabase } from '../../lib/supabase'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Modal } from '../../components/ui/Modal'
+import { onSalaryGenerated } from '../../services/financeService'
 
 const emptyForm = {
   name: '', role: '', email: '', phone: '', document: '', address: '',
@@ -158,8 +159,27 @@ export function Employees() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3 justify-end">
-                      <button onClick={() => openEdit(employee)} className="text-blue-600 hover:text-blue-700 text-xs font-medium">Editar</button>
-                      <button onClick={() => handleDelete(employee.id)} className="text-red-500 hover:text-red-600 text-xs font-medium">Excluir</button>
+                      <button
+                        onClick={() => {
+                          if (employee.salary && confirm(`Gerar conta a pagar de ${fmt(employee.salary)} para ${employee.name}?`)) {
+                            const dueDate = new Date()
+                            dueDate.setDate(1)
+                            dueDate.setMonth(dueDate.getMonth() + 1)
+                            onSalaryGenerated({
+                              businessId,
+                              employeeName: employee.name,
+                              amount: employee.salary,
+                              dueDate: dueDate.toISOString().split('T')[0],
+                            })
+                            alert('Salário gerado em Contas a Pagar!')
+                          }
+                        }}
+                        className="text-green-600 dark:text-green-400 text-xs font-medium"
+                      >
+                        Salário
+                      </button>
+                      <button onClick={() => openEdit(employee)} className="text-blue-600 dark:text-blue-400 hover:text-blue-700 text-xs font-medium">Editar</button>
+                      <button onClick={() => handleDelete(employee.id)} className="text-red-500 dark:text-red-400 hover:text-red-600 text-xs font-medium">Excluir</button>
                     </div>
                   </td>
                 </tr>

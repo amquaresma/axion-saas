@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
+import { onServiceCompleted } from '../../services/financeService'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Modal } from '../../components/ui/Modal'
@@ -59,11 +60,16 @@ export function Services() {
     setShowModal(true)
   }
 
-  async function handleSave() {
-    if (!form.name.trim()) { setError('Nome é obrigatório.'); return }
-    setSaving(true)
-    setError('')
+ async function handleSave() {
+  if (!form.name.trim()) {
+    setError('Nome é obrigatório.')
+    return
+  }
 
+  setSaving(true)
+  setError('')
+
+  try {
     const payload = {
       name: form.name,
       description: form.description,
@@ -73,16 +79,67 @@ export function Services() {
     }
 
     if (editingId) {
-      await supabase.from('services').update(payload).eq('id', editingId)
+      const { data: oldService, error: oldServiceError } = await supabase
+        .from('services')
+        .select('status')
+        .eq('id', editingId)
+        .single()
+
+      if (oldServiceError) throw oldServiceError
+
+      const { error: updateError } = await supabase
+        .from('services')
+        .update(payload)
+        .eq('id', editingId)
+
+      if (updateError) throw updateError
+
+      // Se concluiu o serviço, gera conta a receber
+      if (
+        oldService?.status !== 'concluído' &&
+        form.status === 'concluído' &&
+        payload.price > 0
+      ) {
+        await onServiceCompleted({
+          businessId,
+          clientId: form.client_id,
+          description: form.name,
+          amount: payload.price,
+        })
+      }
     } else {
-      await supabase.from('services').insert({ ...payload, business_id: businessId })
+      const { error: insertError } = await supabase
+        .from('services')
+        .insert({
+          ...payload,
+          business_id: businessId,
+        })
+
+      if (insertError) throw insertError
+
+      // Se já for criado como concluído
+      if (
+        form.status === 'concluído' &&
+        payload.price > 0
+      ) {
+        await onServiceCompleted({
+          businessId,
+          clientId: form.client_id,
+          description: form.name,
+          amount: payload.price,
+        })
+      }
     }
 
-    setSaving(false)
     setShowModal(false)
     fetchData()
+  } catch (err) {
+    console.error(err)
+    setError(err.message || 'Erro ao salvar serviço.')
+  } finally {
+    setSaving(false)
   }
-
+}
   async function handleDelete(id) {
     if (!confirm('Deseja excluir este serviço?')) return
     await supabase.from('services').delete().eq('id', id)
