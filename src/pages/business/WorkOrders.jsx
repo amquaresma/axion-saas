@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
+import { onWorkOrderCompleted } from "../../services/financeService"
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Modal } from '../../components/ui/Modal'
@@ -64,10 +65,15 @@ export function WorkOrders() {
   }
 
   async function handleSave() {
-    if (!form.client_id) { setError('Selecione um cliente.'); return }
-    setSaving(true)
-    setError('')
+  if (!form.client_id) {
+    setError('Selecione um cliente.')
+    return
+  }
 
+  setSaving(true)
+  setError('')
+
+  try {
     const payload = {
       client_id: form.client_id || null,
       equipment_id: form.equipment_id || null,
@@ -79,15 +85,70 @@ export function WorkOrders() {
     }
 
     if (editingId) {
-      await supabase.from('work_orders').update(payload).eq('id', editingId)
+      // Busca o status anterior da OS
+      const { data: oldOrder, error: oldOrderError } = await supabase
+        .from('work_orders')
+        .select('status')
+        .eq('id', editingId)
+        .single()
+
+      if (oldOrderError) throw oldOrderError
+
+      // Atualiza a OS
+      const { error: updateError } = await supabase
+        .from('work_orders')
+        .update(payload)
+        .eq('id', editingId)
+
+      if (updateError) throw updateError
+
+      // Se acabou de ser concluída, cria automaticamente uma conta a receber
+      if (
+        oldOrder?.status !== 'concluída' &&
+        form.status === 'concluída' &&
+        payload.price > 0
+      ) {
+        await onWorkOrderCompleted({
+          businessId,
+          clientId: form.client_id,
+          description: form.diagnosis || 'Ordem de Serviço',
+          amount: payload.price,
+        })
+      }
     } else {
-      await supabase.from('work_orders').insert({ ...payload, business_id: businessId })
+      // Cria nova OS
+      const { error: insertError } = await supabase
+        .from('work_orders')
+        .insert({
+          ...payload,
+          business_id: businessId,
+        })
+
+      if (insertError) throw insertError
+
+      // Se já for criada como concluída, gera a conta automaticamente
+      if (
+        form.status === 'concluída' &&
+        payload.price > 0
+      ) {
+        await onWorkOrderCompleted({
+          businessId,
+          clientId: form.client_id,
+          description: form.diagnosis || 'Ordem de Serviço',
+          amount: payload.price,
+        })
+      }
     }
 
-    setSaving(false)
     setShowModal(false)
     fetchData()
+  } catch (err) {
+    console.error(err)
+    setError(err.message || 'Erro ao salvar ordem de serviço.')
+  } finally {
+    setSaving(false)
   }
+}
 
   async function handleDelete(id) {
     if (!confirm('Deseja excluir esta ordem de serviço?')) return
