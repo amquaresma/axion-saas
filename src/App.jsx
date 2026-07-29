@@ -9,6 +9,8 @@ import { SelectBusiness } from './pages/dashboard/SelectBusiness'
 import { CreateBusiness } from './pages/dashboard/CreateBusiness'
 import { BusinessLayout } from './layouts/BusinessLayout'
 import { BusinessDashboard } from './pages/business/Dashboard'
+import { Quotes } from './pages/business/Quotes'
+import { Orders } from './pages/business/Orders'
 import { Clients } from './pages/business/Clients'
 import { Services } from './pages/business/Services'
 import { Finance } from './pages/business/Finance'
@@ -51,6 +53,8 @@ function AppRoutes() {
       <Route path="/notifications" element={<PrivateRoute><Notifications /></PrivateRoute>} />
       <Route path="/b/:businessId" element={<PrivateRoute><BusinessLayout><Navigate to="dashboard" /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/dashboard" element={<PrivateRoute><BusinessLayout><BusinessDashboard /></BusinessLayout></PrivateRoute>} />
+      <Route path="/b/:businessId/orcamentos" element={<PrivateRoute><BusinessLayout><Quotes /></BusinessLayout></PrivateRoute>} />
+      <Route path="/b/:businessId/pedidos" element={<PrivateRoute><BusinessLayout><Orders /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/clientes" element={<PrivateRoute><BusinessLayout><Clients /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/servicos" element={<PrivateRoute><BusinessLayout><Services /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/financeiro" element={<PrivateRoute><BusinessLayout><Finance /></BusinessLayout></PrivateRoute>} />

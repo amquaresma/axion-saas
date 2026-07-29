@@ -9,6 +9,13 @@ const menuGroups = [
     ]
   },
   {
+    label: 'Vendas',
+    items: [
+      { label: 'Orçamentos', path: 'orcamentos' },
+      { label: 'Pedidos', path: 'pedidos' },
+    ]
+  },
+  {
     label: 'Operacional',
     items: [
       { label: 'Clientes', path: 'clientes' },
