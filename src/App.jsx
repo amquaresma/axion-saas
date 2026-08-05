@@ -18,6 +18,7 @@ import { Bills } from './pages/business/Bills'
 import { BankAccounts } from './pages/business/BankAccounts'
 import { Transfers } from './pages/business/Transfers'
 import { Inventory } from './pages/business/Inventory'
+import { InventoryMovements } from './pages/business/InventoryMovements'
 import { Employees } from './pages/business/Employees'
 import { WorkOrders } from './pages/business/WorkOrders'
 import { Equipment } from './pages/business/Equipment'
@@ -62,6 +63,7 @@ function AppRoutes() {
       <Route path="/b/:businessId/bancos" element={<PrivateRoute><BusinessLayout><BankAccounts /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/transferencias" element={<PrivateRoute><BusinessLayout><Transfers /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/estoque" element={<PrivateRoute><BusinessLayout><Inventory /></BusinessLayout></PrivateRoute>} />
+      <Route path="/b/:businessId/movimentacoes" element={<PrivateRoute><BusinessLayout><InventoryMovements /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/funcionarios" element={<PrivateRoute><BusinessLayout><Employees /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/ordens-servico" element={<PrivateRoute><BusinessLayout><WorkOrders /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/equipamentos" element={<PrivateRoute><BusinessLayout><Equipment /></BusinessLayout></PrivateRoute>} />

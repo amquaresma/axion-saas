@@ -4,9 +4,7 @@ import { useBusiness } from '../contexts/BusinessContext'
 const menuGroups = [
   {
     label: 'Geral',
-    items: [
-      { label: 'Dashboard', path: 'dashboard' },
-    ]
+    items: [{ label: 'Dashboard', path: 'dashboard' }]
   },
   {
     label: 'Vendas',
@@ -31,6 +29,7 @@ const menuGroups = [
       { label: 'Funcionários', path: 'funcionarios' },
       { label: 'Ferramentas', path: 'ferramentas' },
       { label: 'Estoque', path: 'estoque' },
+      { label: 'Movimentações', path: 'movimentacoes' },
     ]
   },
   {
