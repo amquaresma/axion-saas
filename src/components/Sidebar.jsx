@@ -27,6 +27,9 @@ const menuGroups = [
     label: 'Gestão',
     items: [
       { label: 'Funcionários', path: 'funcionarios' },
+      { label: 'Adiantamentos', path: 'adiantamentos' },
+      { label: 'Férias', path: 'ferias' },
+      { label: 'Controle de Horas', path: 'horas' },
       { label: 'Ferramentas', path: 'ferramentas' },
       { label: 'Estoque', path: 'estoque' },
       { label: 'Movimentações', path: 'movimentacoes' },

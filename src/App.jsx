@@ -20,6 +20,9 @@ import { Transfers } from './pages/business/Transfers'
 import { Inventory } from './pages/business/Inventory'
 import { InventoryMovements } from './pages/business/InventoryMovements'
 import { Employees } from './pages/business/Employees'
+import { EmployeeAdvances } from './pages/business/EmployeeAdvances'
+import { EmployeeVacations } from './pages/business/EmployeeVacations'
+import { EmployeeHours } from './pages/business/EmployeeHours'
 import { WorkOrders } from './pages/business/WorkOrders'
 import { Equipment } from './pages/business/Equipment'
 import { Tools } from './pages/business/Tools'
@@ -65,6 +68,9 @@ function AppRoutes() {
       <Route path="/b/:businessId/estoque" element={<PrivateRoute><BusinessLayout><Inventory /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/movimentacoes" element={<PrivateRoute><BusinessLayout><InventoryMovements /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/funcionarios" element={<PrivateRoute><BusinessLayout><Employees /></BusinessLayout></PrivateRoute>} />
+      <Route path="/b/:businessId/adiantamentos" element={<PrivateRoute><BusinessLayout><EmployeeAdvances /></BusinessLayout></PrivateRoute>} />
+      <Route path="/b/:businessId/ferias" element={<PrivateRoute><BusinessLayout><EmployeeVacations /></BusinessLayout></PrivateRoute>} />
+      <Route path="/b/:businessId/horas" element={<PrivateRoute><BusinessLayout><EmployeeHours /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/ordens-servico" element={<PrivateRoute><BusinessLayout><WorkOrders /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/equipamentos" element={<PrivateRoute><BusinessLayout><Equipment /></BusinessLayout></PrivateRoute>} />
       <Route path="/b/:businessId/ferramentas" element={<PrivateRoute><BusinessLayout><Tools /></BusinessLayout></PrivateRoute>} />
