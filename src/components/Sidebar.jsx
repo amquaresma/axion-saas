@@ -53,6 +53,12 @@ const menuGroups = [
     ]
   },
   {
+    label: 'Contabilidade',
+    items: [
+      { label: 'Lançamentos', path: 'contabilidade' },
+    ]
+  },
+  {
     label: 'Inteligência',
     items: [
       { label: 'Central de Controle', path: 'controle' },
