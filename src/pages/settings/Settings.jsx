@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { supabase } from '../../lib/supabase'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
+import { PageHeader } from '../../components/PageHeader'
 
 export function Settings() {
   const { user, signOut } = useAuth()
@@ -42,13 +43,7 @@ export function Settings() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4">
-        <div className="max-w-2xl mx-auto flex items-center justify-between">
-          <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">Axion</span>
-          <button onClick={() => navigate(-1)} className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">Voltar</button>
-        </div>
-      </header>
-
+      <PageHeader />
       <main className="max-w-2xl mx-auto px-6 py-12">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Configurações</h1>
