@@ -19,12 +19,12 @@ export function BusinessDashboard() {
       const now = new Date()
       const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
       const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0]
+      const today = now.toISOString().split('T')[0]
 
       let daysBack = 30
       if (filter === '7d') daysBack = 7
       if (filter === '90d') daysBack = 90
       if (filter === '12m') daysBack = 365
-
       const since = new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
 
       const [
@@ -34,6 +34,9 @@ export function BusinessDashboard() {
         { data: allTransactions },
         { data: recentTransactions },
         { data: inventory },
+        { data: bills },
+        { data: quotes },
+        { data: orders },
       ] = await Promise.all([
         supabase.from('clients').select('*', { count: 'exact', head: true }).eq('business_id', businessId),
         supabase.from('services').select('*', { count: 'exact', head: true }).eq('business_id', businessId).eq('status', 'em andamento'),
@@ -41,13 +44,28 @@ export function BusinessDashboard() {
         supabase.from('transactions').select('*').eq('business_id', businessId).gte('date', firstDay).lte('date', lastDay).order('date', { ascending: false }),
         supabase.from('transactions').select('*').eq('business_id', businessId).gte('date', since).order('date', { ascending: false }),
         supabase.from('inventory').select('quantity, min_quantity').eq('business_id', businessId),
+        supabase.from('bills').select('type, amount, status, due_date').eq('business_id', businessId),
+        supabase.from('quotes').select('status').eq('business_id', businessId),
+        supabase.from('orders').select('status, total').eq('business_id', businessId),
       ])
 
       const receitas = allTransactions?.filter(t => t.type === 'receita').reduce((acc, t) => acc + Number(t.amount), 0) || 0
       const despesas = allTransactions?.filter(t => t.type === 'despesa').reduce((acc, t) => acc + Number(t.amount), 0) || 0
       const itensBaixoEstoque = inventory?.filter(i => i.quantity <= i.min_quantity).length || 0
+      const contasVencidas = bills?.filter(b => b.status === 'vencido').reduce((acc, b) => acc + Number(b.amount), 0) || 0
+      const contasAReceber = bills?.filter(b => b.type === 'receber' && b.status === 'pendente').reduce((acc, b) => acc + Number(b.amount), 0) || 0
+      const contasAPagar = bills?.filter(b => b.type === 'pagar' && b.status === 'pendente').reduce((acc, b) => acc + Number(b.amount), 0) || 0
+      const orcamentosPendentes = quotes?.filter(q => q.status === 'enviado').length || 0
+      const pedidosAtivos = orders?.filter(o => ['pendente', 'em_producao', 'pronto'].includes(o.status)).length || 0
+      const totalPedidosMes = orders?.reduce((acc, o) => acc + Number(o.total || 0), 0) || 0
 
-      setStats({ clients: clients || 0, services: services || 0, openOrders: openOrders || 0, receitas, despesas, saldo: receitas - despesas, itensBaixoEstoque })
+      setStats({
+        clients: clients || 0, services: services || 0, openOrders: openOrders || 0,
+        receitas, despesas, saldo: receitas - despesas, itensBaixoEstoque,
+        contasVencidas, contasAReceber, contasAPagar,
+        orcamentosPendentes, pedidosAtivos, totalPedidosMes,
+        margem: receitas > 0 ? ((receitas - despesas) / receitas * 100).toFixed(1) : 0,
+      })
       setTransactions(recentTransactions || [])
 
       const grouped = {}
@@ -58,31 +76,51 @@ export function BusinessDashboard() {
         else grouped[date].despesas += Number(t.amount)
       })
 
-      const sortedChart = Object.values(grouped).sort((a, b) => {
+      setChartData(Object.values(grouped).sort((a, b) => {
         const [da, ma] = a.date.split('/').map(Number)
         const [db, mb] = b.date.split('/').map(Number)
         return ma !== mb ? ma - mb : da - db
-      })
-
-      setChartData(sortedChart)
+      }))
       setLoading(false)
     }
     fetchData()
   }, [businessId, filter])
 
-  const fmt = (val) => `R$ ${Number(val).toFixed(2).replace('.', ',')}`
+  const fmt = (val) => `R$ ${Number(val || 0).toFixed(2).replace('.', ',')}`
 
   if (loadingBusiness || loading) return <p className="text-gray-400 text-sm">Carregando...</p>
 
-  const statCards = [
-    { label: 'Clientes', value: stats.clients, path: 'clientes', color: 'text-gray-900 dark:text-white' },
-    { label: 'Serviços em andamento', value: stats.services, path: 'servicos', color: 'text-blue-600 dark:text-blue-400' },
-    { label: 'OS abertas', value: stats.openOrders, path: 'ordens-servico', color: 'text-orange-600 dark:text-orange-400' },
-    { label: 'Estoque baixo', value: stats.itensBaixoEstoque, path: 'estoque', color: stats.itensBaixoEstoque > 0 ? 'text-red-500' : 'text-gray-900 dark:text-white' },
-    { label: 'Receitas do mês', value: fmt(stats.receitas), path: 'financeiro', color: 'text-green-600 dark:text-green-400' },
-    { label: 'Despesas do mês', value: fmt(stats.despesas), path: 'financeiro', color: 'text-red-500 dark:text-red-400' },
-    { label: 'Lucro do mês', value: fmt(stats.saldo), path: 'financeiro', color: stats.saldo >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500' },
-    { label: 'Saúde do negócio', value: '→ Ver', path: 'saude', color: 'text-blue-600 dark:text-blue-400' },
+  const kpiGroups = [
+    {
+      title: 'Financeiro do mês',
+      color: 'border-green-500',
+      cards: [
+        { label: 'Receitas', value: fmt(stats.receitas), color: 'text-green-600 dark:text-green-400', path: 'financeiro' },
+        { label: 'Despesas', value: fmt(stats.despesas), color: 'text-red-500 dark:text-red-400', path: 'financeiro' },
+        { label: 'Lucro', value: fmt(stats.saldo), color: stats.saldo >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500', path: 'financeiro' },
+        { label: 'Margem', value: `${stats.margem}%`, color: 'text-blue-600 dark:text-blue-400', path: 'relatorios' },
+      ]
+    },
+    {
+      title: 'Contas',
+      color: 'border-blue-500',
+      cards: [
+        { label: 'A receber', value: fmt(stats.contasAReceber), color: 'text-green-600 dark:text-green-400', path: 'contas' },
+        { label: 'A pagar', value: fmt(stats.contasAPagar), color: 'text-red-500 dark:text-red-400', path: 'contas' },
+        { label: 'Vencidas', value: fmt(stats.contasVencidas), color: stats.contasVencidas > 0 ? 'text-orange-600 dark:text-orange-400' : 'text-gray-900 dark:text-white', path: 'contas' },
+        { label: 'Pedidos do mês', value: fmt(stats.totalPedidosMes), color: 'text-blue-600 dark:text-blue-400', path: 'pedidos' },
+      ]
+    },
+    {
+      title: 'Operacional',
+      color: 'border-purple-500',
+      cards: [
+        { label: 'Clientes', value: stats.clients, color: 'text-gray-900 dark:text-white', path: 'clientes' },
+        { label: 'OS abertas', value: stats.openOrders, color: stats.openOrders > 0 ? 'text-orange-600 dark:text-orange-400' : 'text-gray-900 dark:text-white', path: 'ordens-servico' },
+        { label: 'Orçamentos pendentes', value: stats.orcamentosPendentes, color: stats.orcamentosPendentes > 0 ? 'text-blue-600 dark:text-blue-400' : 'text-gray-900 dark:text-white', path: 'orcamentos' },
+        { label: 'Estoque baixo', value: stats.itensBaixoEstoque, color: stats.itensBaixoEstoque > 0 ? 'text-red-500' : 'text-gray-900 dark:text-white', path: 'estoque' },
+      ]
+    },
   ]
 
   return (
@@ -92,28 +130,32 @@ export function BusinessDashboard() {
         <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Visão geral do negócio</p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-        {statCards.map((card) => (
-          <div
-            key={card.label}
-            onClick={() => navigate(`/b/${businessId}/${card.path}`)}
-            className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 cursor-pointer hover:border-blue-400 dark:hover:border-blue-600 hover:shadow-sm transition-all"
-          >
-            <p className="text-xs text-gray-500 dark:text-gray-400">{card.label}</p>
-            <p className={`text-xl font-bold mt-1 ${card.color}`}>{card.value}</p>
+      {/* KPI Groups */}
+      {kpiGroups.map((group) => (
+        <div key={group.title} className="mb-6">
+          <h2 className={`text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3 pl-1 border-l-2 ${group.color} pl-3`}>{group.title}</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {group.cards.map((card) => (
+              <div
+                key={card.label}
+                onClick={() => navigate(`/b/${businessId}/${card.path}`)}
+                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 cursor-pointer hover:border-blue-400 dark:hover:border-blue-600 hover:shadow-sm transition-all"
+              >
+                <p className="text-xs text-gray-500 dark:text-gray-400">{card.label}</p>
+                <p className={`text-lg font-bold mt-1 ${card.color}`}>{card.value}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
 
-      <div className="flex items-center justify-between mb-4">
+      {/* Filtro */}
+      <div className="flex items-center justify-between mb-4 mt-8">
         <h2 className="text-base font-semibold text-gray-900 dark:text-white">Fluxo de caixa</h2>
         <div className="flex gap-1">
           {[['7d', '7 dias'], ['30d', '30 dias'], ['90d', '90 dias'], ['12m', '12 meses']].map(([val, label]) => (
-            <button
-              key={val}
-              onClick={() => setFilter(val)}
-              className={"px-3 py-1 rounded-lg text-xs font-medium border transition-all " + (filter === val ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-400 text-blue-700 dark:text-blue-400' : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800')}
-            >
+            <button key={val} onClick={() => setFilter(val)}
+              className={"px-3 py-1 rounded-lg text-xs font-medium border transition-all " + (filter === val ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-400 text-blue-700 dark:text-blue-400' : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800')}>
               {label}
             </button>
           ))}
