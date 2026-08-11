@@ -46,6 +46,13 @@ const menuGroups = [
     ]
   },
   {
+    label: 'Fiscal',
+    items: [
+      { label: 'Notas Fiscais', path: 'notas-fiscais' },
+      { label: 'Apuração de Impostos', path: 'impostos' },
+    ]
+  },
+  {
     label: 'Inteligência',
     items: [
       { label: 'Central de Controle', path: 'controle' },
