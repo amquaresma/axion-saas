@@ -139,10 +139,10 @@ export function BusinessDashboard() {
               <div
                 key={card.label}
                 onClick={() => navigate(`/b/${businessId}/${card.path}`)}
-                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 cursor-pointer hover:border-blue-400 dark:hover:border-blue-600 hover:shadow-sm transition-all"
+                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 cursor-pointer hover:border-blue-400 dark:hover:border-blue-600 hover:shadow-md transition-all"
               >
-                <p className="text-xs text-gray-500 dark:text-gray-400">{card.label}</p>
-                <p className={`text-lg font-bold mt-1 ${card.color}`}>{card.value}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{card.label}</p>
+                <p className={`text-2xl font-bold mt-1.5 ${card.color}`}>{card.value}</p>
               </div>
             ))}
           </div>
